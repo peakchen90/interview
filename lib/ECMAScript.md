@@ -47,6 +47,57 @@ function _instanceof(left, right) {
 
 ### 实现函数的call、apply、bind方法
 
+```js
+Function.prototype.call = function(ctx) {
+    if(ctx == null) ctx = window
+    else if(typeof ctx === 'string') ctx = new String(ctx)
+    else if(typeof ctx === 'number') ctx = new Number(ctx)
+    else if(typeof ctx === 'boolean') ctx = new Boolean(ctx)
+    ctx.__fn__ = this
+
+    let args = [...arguments].slice(1)
+    let result = ctx.__fn__(...args)
+    delete ctx.__fn__
+    return result
+}
+```
+
+```js
+Function.prototype.apply = function(ctx) {
+    if(ctx == null) ctx = window
+    else if(typeof ctx === 'string') ctx = new String(ctx)
+    else if(typeof ctx === 'number') ctx = new Number(ctx)
+    else if(typeof ctx === 'boolean') ctx = new Boolean(ctx)
+    ctx.__fn__ = this
+
+    let args = arguments[1]
+    let result
+    if(args) {
+        result = ctx.__fn__(...args)
+    } else {
+        result = ctx.__fn__()
+    }
+    delete ctx.__fn__
+    return result
+}
+```
+
+```js
+Function.prototype.bind = function(ctx) {
+    if(ctx == null) ctx = window
+    else if(typeof ctx === 'string') ctx = new String(ctx)
+    else if(typeof ctx === 'number') ctx = new Number(ctx)
+    else if(typeof ctx === 'boolean') ctx = new Boolean(ctx)
+    ctx.__fn__ = this
+    
+    let args = [...arguments].slice(1)
+    let result = function() {
+        let _args = [...arguments, ...args]
+        ctx.__fn__(..._args)
+    }
+    return result
+}
+```
 
 ### Promise原理，手写Promise
 
