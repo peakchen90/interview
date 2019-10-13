@@ -119,3 +119,9 @@ Function.prototype.bind = function(ctx) {
 ### JS深拷贝
 
 
+### 实现防抖函数(debounce)
+
+
+### 实现节流函数(throttle)
+
+
