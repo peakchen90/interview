@@ -139,7 +139,45 @@ function ajax(method, url, data, onSuccess, onError) {
 
 
 ### JS深拷贝
+```js
+function deepClone(target) {
+    function clone(obj, parent = [], newParent = []) {
+        let index = parent.findIndex(p => p === obj)
+        if(index !== -1) {
+            return newParent[index]
+        }
 
+        let newObj
+
+        if(Object.prototype.toString.call(obj) === '[object Object]') {
+            newObj = {}
+        } else if(Array.isArray(obj)) {
+            newObj = []
+        } else {
+            return obj
+        }
+
+        parent = [...parent, obj]
+        newParent = [...newParent, newObj]
+        Object.keys(obj).forEach(key => {
+            newObj[key] = clone(obj[key], parent, newParent)
+        })
+
+        return newObj
+    }
+
+    if(
+        Object.prototype.toString.call(target) === '[object Object]'
+        || Array.isArray(target)
+    ) {
+        return clone(target)
+    }
+
+    return target
+}
+```
+
+实现思路：递归拷贝一个数组或对象，递归调用时，将所有父级的引用传到下一级，以判断是否循环引用，如果是循环引用，则将引用的对象替换成新的拷贝对象。
 
 ### 实现防抖函数(debounce)
 
