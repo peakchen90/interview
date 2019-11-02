@@ -110,16 +110,24 @@ Function.prototype.bind = function(ctx) {
 ### 实现原生AJAX
 
 ```js
-function ajax(method, url, data, callback) {
+function ajax(method, url, data, onSuccess, onError) {
+    onSuccess = onSuccess || () => {}
+    onError = onError || () => {}
+
     let xhr = new XMLHttpRequest()
     xhr.open(method, url, true)
-    // xhr.setRequestHeader(key, value)
     xhr.send(data)
     xhr.onreadystatechange = function() {
-        if(xhr.readyState === 4 && xhr.status === 200) {
-            callback(xhr.responseText)
+        if(xhr.readyState === 4) {
+            if(xhr.status === 200) {
+                onSuccess(xhr.responseText)
+            } else {
+                onError(xhr)
+            }
         }
     }
+    xhr.ontimeout = onError
+    xhr.onerror = onError
 }
 ```
 
